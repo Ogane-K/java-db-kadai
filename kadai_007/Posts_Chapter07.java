@@ -47,19 +47,22 @@ public class Posts_Chapter07 {
 			System.out.println("レコード追加を実行します");
 
 			//			postListの各フィールドをデータベースのフィールドの型に合うように変換して代入
-			int recordCount = 0;
+			
 			for (String[] post : postList) {
 				insertStatement.setInt(1, Integer.parseInt(post[0]));
 				insertStatement.setDate(2, java.sql.Date.valueOf(post[1]));
 				insertStatement.setString(3, post[2]);
 				insertStatement.setInt(4, Integer.parseInt(post[3]));
 
-				//				ココで送信
-				insertStatement.executeUpdate();
-				recordCount++;
+				//				SQLをバッチに溜める
+				insertStatement.addBatch();
+				
 
 			}
-			System.out.println(recordCount + "件のレコードが追加されました");
+			
+			int recordCount[] = insertStatement.executeBatch();
+			
+			System.out.println(recordCount.length + "件のレコードが追加されました");
 
 			//			レコード検索部分
 			//			テーブル検索用のSQLクエリの作成
